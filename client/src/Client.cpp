@@ -179,6 +179,10 @@ void Client::handleListServer(const std::string&) {
 		fmt::print("[{}]\t{}\n", i, name);
 	}
 
+	if(_hashNode.text().as_string() != _tree.topHash()) {
+		std::cerr << "Server hash doesn't match stored hash!\n\n";
+	}
+
 	std::cout << '\n';
 }
 void Client::handleUpload(const std::string &in) {
