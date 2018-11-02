@@ -14,11 +14,6 @@ StringSource::StringSource(const std::string &source) : LeafSource(), _source(so
 
 std::string StringSource::hash() {
 
-	CryptoPP::SHA256 sha;
-	std::string ret(sha.DIGESTSIZE, '\0');
-
-	sha.CalculateDigest((byte*)ret.data(), (byte*)_source.c_str(), _source.length());
-
-	return std::move(ret);
+	return _source;
 
 }
