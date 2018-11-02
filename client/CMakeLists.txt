@@ -10,9 +10,10 @@ add_executable(${EXEC_NAME} ${SOURCE_FILES} ${SHARED_FILES})
 
 find_package(PkgConfig REQUIRED)
 
-#Link
-    include_directories(${SSL_WRAP_INCLUDE})
-    target_link_libraries(${EXEC_NAME} ${SSL_WRAP_LIB} ${SSL_WRAP_DEPS})
+#Link SSLWrap
+	find_package(SSLWrap REQUIRED)
+    include_directories(${SSLWRAP_INCLUDE})
+	target_link_libraries(${EXEC_NAME} ${SSLWRAP_LIBRARY} ${SSLWRAP_DEPS})
 
 #Find and link Crypto++
     find_package(CryptoPP REQUIRED)

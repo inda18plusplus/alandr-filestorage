@@ -12,7 +12,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -lstdc+
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Werror")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 
-add_subdirectory(lib/sslWrap)
-add_subdirectory(lib/shared)
+add_subdirectory(lib)
 add_subdirectory(client)
 add_subdirectory(server)

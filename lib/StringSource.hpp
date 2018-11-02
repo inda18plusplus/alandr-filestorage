@@ -5,7 +5,7 @@
 #ifndef FILESTORAGE_STRINGSOURCE_HPP
 #define FILESTORAGE_STRINGSOURCE_HPP
 
-#include <LeafSource.hpp>
+#include "LeafSource.hpp"
 
 class StringSource : public LeafSource {
 

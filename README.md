@@ -2,7 +2,7 @@
 
 ### Dependencies
 
-- Openssl
+- A custom openSSL wrapper called [SSLWrap](https://github.com/AlbinAndreasson/SSLWrap)
 - Crypto++
 - libfmt
 - pugixml
