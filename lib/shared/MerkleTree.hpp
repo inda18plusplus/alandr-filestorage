@@ -16,7 +16,7 @@
 
 class MerkleTree {
 
-	static const int maxLevels = 4;
+	static const int maxLevels = 8;
 
 	std::shared_ptr<Node> _root;
 
