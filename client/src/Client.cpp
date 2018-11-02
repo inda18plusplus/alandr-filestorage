@@ -23,9 +23,9 @@
 #include "File.hpp"
 #include "MerkleTree.hpp"
 
-Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})), _server(_ctx) {
+Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})), _server(_ctx), _configPath(configFile) {
 
-	_configDoc.load_file(configFile.string().c_str());
+	_configDoc.load_file(_configPath.c_str());
 	auto cfgNode = _configDoc.child("config");
 
 	_serverIP = {cfgNode.child("serverIP").text().as_string()};
@@ -39,24 +39,26 @@ Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})
 		_fsRoot = _fsRoot.parent_path();
 	}
 
-	if(auto passNode = cfgNode.child("passSalt")) {
-		_passSalt = passNode.text().as_string();
+	_passSalt.resize(32);
+	if(auto saltNode = cfgNode.child("passSalt")) {
+		_passSalt = saltNode.text().as_string();
 	} else {
 		std::cout << "Generating salt\n";
 
-		CryptoPP::AutoSeededRandomPool rng;
-		rng.GenerateBlock((byte*)_passSalt.data(), _passSalt.size());
+		CryptoPP::OS_GenerateRandomBlock(false, (byte*)_passSalt.data(), _passSalt.size());
 
-		passNode.set_value(_passSalt.c_str());
+		saltNode = cfgNode.append_child("passSalt");
+		saltNode.text().set(_passSalt.c_str());
 	}
 
 	_hashNode = cfgNode.child("topHash");
-
 	if(_hashNode.empty()) {
 		_firstTime = true;
+		_hashNode = cfgNode.append_child("topHash");
+		_hashNode.text().set(pugi::node_pcdata);
 	}
 
-	_configDoc.save_file(_configDoc.path('/').c_str());
+	_configDoc.save_file(_configPath.c_str());
 
 	_handlers["ll"] = [this](const std::string str){ handleListLocal(str); };
 	_handlers["ls"] = [this](const std::string str){ handleListServer(str); };
@@ -69,9 +71,9 @@ Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})
 
 Client::~Client() {
 
-	_hashNode.set_value(_tree.topHash().c_str());
+	_hashNode.text().set(_tree.topHash().c_str());
 
-	_configDoc.save_file(_configDoc.path('/').c_str());
+	_configDoc.save_file(_configPath.c_str());
 
 }
 

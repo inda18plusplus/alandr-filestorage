@@ -27,6 +27,7 @@ class Client {
 
 	fs::path _fsRoot;
 
+	std::string _configPath;
 	pugi::xml_document _configDoc;
 
 	unsigned char _encKey[32];
