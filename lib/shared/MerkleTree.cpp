@@ -49,11 +49,15 @@ void MerkleTree::addFile(int id, std::shared_ptr<File> f) {
 	auto& leaf = _leaves[id];
 	leaf->setSource(std::make_unique<FileSource>(f));
 
+	_dirty = true;
+
 }
 void MerkleTree::addString(int id, const std::string &str) {
 
 	auto& leaf = _leaves[id];
 	leaf->setSource(std::make_unique<StringSource>(str));
+
+	_dirty = true;
 
 }
 void MerkleTree::removeFile(int id) {
