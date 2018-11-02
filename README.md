@@ -1,13 +1,13 @@
-#Alandr file storage system
+# Alandr file storage system
 
-###Dependencies
+### Dependencies
 
 - Openssl
 - Crypto++
 - libfmt
 - pugixml
 
-###Algorithms
+### Algorithms
 
 - TLS/SSL for communication (negotiated at run-time)
 - AES128 with GCM for file encryption and authentication
@@ -16,7 +16,7 @@
 These were chosen because I've heard they are standard and 
 I'm not knowledgeable enough about cryptography to choose myself.
 
-###Running
+### Running
 
 Unfortunately somethings are hardcoded right now:
 
@@ -30,7 +30,7 @@ Next to the client binary a config file needs to exist; a template exists as
 If you send SIGINT to the server it will quit when the client disconnects and 
 store the data, just closing will result in data loss
 
-###Commands
+### Commands
 
 Reference guide to the client commands:
 
