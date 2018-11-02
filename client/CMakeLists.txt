@@ -27,8 +27,3 @@ find_package(PkgConfig REQUIRED)
     pkg_check_modules(PUGIXML REQUIRED pugixml)
 	target_link_libraries(${EXEC_NAME} ${PUGIXML_LIBRARIES})
 	target_include_directories(${EXEC_NAME} PUBLIC ${PUGIXML_INCLUDE_DIRS})
-
-#Find and link OpenSSL
-    find_package(OpenSSL REQUIRED)
-    target_link_libraries(${EXEC_NAME} ${OPENSSL_LIBRARIES})
-    target_include_directories(${EXEC_NAME} PUBLIC ${OPENSSL_INCLUDE_DIR})

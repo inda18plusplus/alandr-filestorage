@@ -18,8 +18,6 @@
 #include <cryptopp/filters.h>
 #include <cryptopp/files.h>
 
-#include <openssl/evp.h>
-
 File::File() {
 	_iv = new unsigned char[_ivSize];
 }

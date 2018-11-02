@@ -22,8 +22,3 @@ find_package(PkgConfig REQUIRED)
 #Find and link FMT
     find_package(fmt REQUIRED)
     target_link_libraries(${EXEC_NAME} fmt::fmt)
-
-#Find and link OpenSSL
-    find_package(OpenSSL REQUIRED)
-    target_link_libraries(${EXEC_NAME} ${OPENSSL_LIBRARIES})
-    target_include_directories(${EXEC_NAME} PUBLIC ${OPENSSL_INCLUDE_DIR})
