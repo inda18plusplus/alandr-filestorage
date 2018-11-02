@@ -151,6 +151,10 @@ void Client::doInit() {
 
 	}
 
+	if(_hashNode.text().as_string() != _tree.topHash()) {
+		std::cerr << "Server hash doesn't match stored hash!\n\n";
+	}
+
 }
 
 void Client::handleListLocal(const std::string&) {
@@ -177,10 +181,6 @@ void Client::handleListServer(const std::string&) {
 		std::string name;
 		p >> name;
 		fmt::print("[{}]\t{}\n", i, name);
-	}
-
-	if(_hashNode.text().as_string() != _tree.topHash()) {
-		std::cerr << "Server hash doesn't match stored hash!\n\n";
 	}
 
 	std::cout << '\n';
