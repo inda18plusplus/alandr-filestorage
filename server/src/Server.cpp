@@ -35,10 +35,17 @@ Server::Server() : _ctx(new sw::ServerContext("cert/key.pem", "cert/cert.pem")),
 
 void Server::save() {
 
+	fs::path backup = fs::path{_fsRoot}.replace_filename(_fsRoot.filename().string() + "_bckup"); //Temp dir, contains files before the server started.
+	fs::rename(_fsRoot, backup); //Conveniently also wipes deleted files.
+
+	fs::create_directories(_fsRoot);
+
 	for(auto& p : _files) {
 		fs::path path = _fsRoot / fs::path{std::to_string(p.second->id())};
 		p.second->writeEncrypted(path);
 	}
+
+	fs::remove_all(backup);
 
 }
 void Server::load() {
