@@ -293,13 +293,17 @@ void Client::handleDownload(const std::string &in) {
 
 	p >> ret >> topHash >> *f;
 
-	f->decrypt(_encKey);
+	f->decrypt(_encKey); //Also checks if the id is the one the file was sent with
+
+	if(topHash != _tree.topHash()) {
+		throw std::runtime_error("The server top hash doesn't match own!");
+	}
 
 	_files[f->id()] = f;
 	_tree.addFile(f->id(), f);
 
-	if(topHash != _tree.topHash()) {
-		throw std::runtime_error("The server top hash doesn't match own!"); //Lets not write if something's wrong
+	if(topHash != _tree.topHash()) { //The hash hasn't been changed by the insertion
+		throw std::runtime_error("The received file doesn't match the one used in the server hash!"); //Lets not write if something's wrong
 	}
 
 	f->dump(_fsRoot);
