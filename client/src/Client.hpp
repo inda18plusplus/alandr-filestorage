@@ -58,6 +58,10 @@ private:
 	void doFirstTime();
 	void doInit();
 
+	std::string getStoredHash();
+	void setStoredHash(const std::string& s);
+
+
 	void handleListLocal(const std::string& in);
 	void handleListServer(const std::string& in);
 	void handleUpload(const std::string& in);

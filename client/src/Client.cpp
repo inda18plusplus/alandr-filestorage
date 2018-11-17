@@ -11,6 +11,7 @@
 #include <string>
 
 #include <cryptopp/aes.h>
+#include <cryptopp/base64.h>
 #include <cryptopp/hkdf.h>
 #include <cryptopp/sha.h>
 #include <cryptopp/osrng.h>
@@ -39,23 +40,36 @@ Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})
 		_fsRoot = _fsRoot.parent_path();
 	}
 
-	_passSalt.resize(32);
 	if(auto saltNode = cfgNode.child("passSalt")) {
-		_passSalt = saltNode.text().as_string();
+		std::string str = saltNode.text().as_string();
+		CryptoPP::StringSource(str, true,
+		    new CryptoPP::Base64Decoder(
+				new CryptoPP::StringSink(_passSalt)
+		    )
+		);
 	} else {
 		std::cout << "Generating salt\n";
+
+		_passSalt.resize(32);
 
 		CryptoPP::OS_GenerateRandomBlock(false, (byte*)_passSalt.data(), _passSalt.size());
 
 		saltNode = cfgNode.append_child("passSalt");
-		saltNode.text().set(_passSalt.c_str());
+
+		std::string encoded;
+		CryptoPP::StringSource(_passSalt, true,
+			new CryptoPP::Base64Encoder(
+				new CryptoPP::StringSink(encoded)
+			)
+		);
+		saltNode.text().set(encoded.c_str());
 	}
 
 	_hashNode = cfgNode.child("topHash");
 	if(_hashNode.empty()) {
 		_firstTime = true;
 		_hashNode = cfgNode.append_child("topHash");
-		_hashNode.text().set(pugi::node_pcdata);
+		setStoredHash("");
 	}
 
 	_configDoc.save_file(_configPath.c_str());
@@ -71,7 +85,7 @@ Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})
 
 Client::~Client() {
 
-	_hashNode.text().set(_tree.topHash().c_str());
+	setStoredHash(_tree.topHash());
 
 	_configDoc.save_file(_configPath.c_str());
 
@@ -130,6 +144,8 @@ void Client::doFirstTime() {
 		std::cerr << "The empty topHash doesn't match!\n\n";
 	}
 
+	setStoredHash(topHash);
+
 }
 void Client::doInit() {
 
@@ -150,9 +166,37 @@ void Client::doInit() {
 
 	}
 
-	if(_hashNode.text().as_string() != _tree.topHash()) {
+	if(getStoredHash() != _tree.topHash()) {
 		std::cerr << "Server hash doesn't match stored hash!\n\n";
 	}
+
+}
+
+std::string Client::getStoredHash() {
+
+	std::string encodedData = _hashNode.text().as_string();
+	std::string ret;
+
+	CryptoPP::StringSource(encodedData, true,
+		new CryptoPP::Base64Decoder(
+			new CryptoPP::StringSink(ret)
+		)
+	);
+
+	return ret;
+
+}
+void Client::setStoredHash(const std::string &s) {
+
+	std::string encodedData;
+
+	CryptoPP::StringSource(s, true,
+		new CryptoPP::Base64Encoder(
+			new CryptoPP::StringSink(encodedData)
+		)
+	);
+
+	_hashNode.text().set(encodedData.c_str());
 
 }
 
