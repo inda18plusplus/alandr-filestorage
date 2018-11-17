@@ -86,8 +86,7 @@ void Client::run() {
 		std::string pass;
 		std::getline(std::cin, pass);
 		CryptoPP::HKDF<CryptoPP::SHA256> hkdf;
-		std::string salt = "salty";
-		hkdf.DeriveKey(_encKey, sizeof(_encKey), (byte*)pass.data(), pass.size(), (byte*)salt.data(), salt.size(), nullptr, 0);
+		hkdf.DeriveKey(_encKey, sizeof(_encKey), (byte*)pass.data(), pass.size(), (byte*)_passSalt.data(), _passSalt.size(), nullptr, 0);
 	}
 
 	if(_firstTime)
