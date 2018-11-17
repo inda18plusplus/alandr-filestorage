@@ -26,7 +26,7 @@
 
 using CryptoPP::byte;
 
-Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})), _server(_ctx), _configPath(configFile) {
+Client::Client(fs::path configFile) : _configPath(configFile), _ctx(new sw::ClientContext({}, {{"cert"}})), _server(_ctx) {
 
 	_configDoc.load_file(_configPath.c_str());
 	auto cfgNode = _configDoc.child("config");

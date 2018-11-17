@@ -62,7 +62,7 @@ private: //Command handlers
 	void handleDelete(sw::Packet& p);
 	void handleGetId(sw::Packet&);
 	void handleDone(sw::Packet&);
-	void handleError(sw::Packet& p);
+	void handleError(sw::Packet&);
 	void handleDisconnect(sw::Packet&);
 	void handleFirstTime(sw::Packet&);
 

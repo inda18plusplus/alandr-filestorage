@@ -192,7 +192,7 @@ void Server::handleGetId(sw::Packet&) {
 void Server::handleDone(sw::Packet &) {
 	
 }
-void Server::handleError(sw::Packet &p) {
+void Server::handleError(sw::Packet &) {
 	
 }
 void Server::handleDisconnect(sw::Packet&) {
