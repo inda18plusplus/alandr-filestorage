@@ -8,6 +8,8 @@
 
 #include "Leaf.hpp"
 
+using CryptoPP::byte;
+
 Node::Node(std::weak_ptr<Node> parent) : _parent(std::move(parent)) {
 
 }

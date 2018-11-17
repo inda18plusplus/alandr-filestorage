@@ -24,6 +24,8 @@
 #include "File.hpp"
 #include "MerkleTree.hpp"
 
+using CryptoPP::byte;
+
 Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})), _server(_ctx), _configPath(configFile) {
 
 	_configDoc.load_file(_configPath.c_str());

@@ -6,6 +6,8 @@
 
 #include <cryptopp/sha.h>
 
+using CryptoPP::byte;
+
 FileSource::FileSource(std::shared_ptr<File> f) : LeafSource(), _file(f) {
 
 
