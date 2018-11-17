@@ -13,7 +13,7 @@
 #include <cryptopp/aes.h>
 #include <cryptopp/base64.h>
 #include <cryptopp/hkdf.h>
-#include <cryptopp/sha.h>
+#include <cryptopp/scrypt.h>
 #include <cryptopp/osrng.h>
 
 #include <fmt/format.h>
@@ -102,8 +102,12 @@ void Client::run() {
 		std::cout << "Please enter a password: ";
 		std::string pass;
 		std::getline(std::cin, pass);
-		CryptoPP::HKDF<CryptoPP::SHA256> hkdf;
-		hkdf.DeriveKey(_encKey, sizeof(_encKey), (byte*)pass.data(), pass.size(), (byte*)_passSalt.data(), _passSalt.size(), nullptr, 0);
+		CryptoPP::Scrypt().DeriveKey(
+			_encKey, sizeof(_encKey),
+			(byte*)pass.data(), pass.length(),
+			(byte*)_passSalt.data(), _passSalt.length(),
+			1 << 20
+		);
 	}
 
 	if(_firstTime)
