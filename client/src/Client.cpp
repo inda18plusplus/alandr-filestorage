@@ -289,16 +289,20 @@ void Client::handleDownload(const std::string &in) {
 	_server.receive(p);
 	COMMAND ret;
 	std::string topHash;
-	File f;
+	auto f = std::make_shared<File>();
 
-	p >> ret >> topHash >> f;
+	p >> ret >> topHash >> *f;
+
+	f->decrypt(_encKey);
+
+	_files[f->id()] = f;
+	_tree.addFile(f->id(), f);
 
 	if(topHash != _tree.topHash()) {
-		std::cerr << "The server tophash doesn't match own!\n\n";
+		throw std::runtime_error("The server top hash doesn't match own!"); //Lets not write if something's wrong
 	}
 
-	f.decrypt(_encKey);
-	f.dump(_fsRoot);
+	f->dump(_fsRoot);
 
 }
 void Client::handleRemove(const std::string &in) {

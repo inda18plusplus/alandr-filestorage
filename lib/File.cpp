@@ -172,7 +172,7 @@ void File::decrypt(unsigned char *key) {
 	decrSS >> encId;
 
 	if(_id != encId) {
-		std::cerr << "File id doesn't match encrypted id!\n\n";
+		throw std::runtime_error("File id doesn't match encrypted id!");
 	}
 
 	decrSS >> _dataDecr;
