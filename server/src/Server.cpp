@@ -151,7 +151,7 @@ void Server::handleDownload(sw::Packet &p) {
 	p >> id;
 
 	p.clear();
-	p << COMMAND::DONE << *_files[id];
+	p << COMMAND::DONE << _tree.topHash() << *_files[id];
 	_client.send(p);
 
 }

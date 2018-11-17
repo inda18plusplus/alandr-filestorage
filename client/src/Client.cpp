@@ -50,6 +50,7 @@ Client::Client(fs::path configFile) : _ctx(new sw::ClientContext({}, {{"cert"}})
 	} else {
 		std::cout << "Generating salt\n";
 
+
 		_passSalt.resize(32);
 
 		CryptoPP::OS_GenerateRandomBlock(false, (byte*)_passSalt.data(), _passSalt.size());
@@ -141,7 +142,7 @@ void Client::doFirstTime() {
 	p >> ret >> topHash;
 
 	if(topHash != _tree.topHash()) {
-		std::cerr << "The empty topHash doesn't match!\n\n";
+		std::cerr << "The empty topHash doesn't match! Something is terribly wrong!\n\n";
 	}
 
 	setStoredHash(topHash);
@@ -281,9 +282,14 @@ void Client::handleDownload(const std::string &in) {
 
 	_server.receive(p);
 	COMMAND ret;
+	std::string topHash;
 	File f;
 
-	p >> ret >> f;
+	p >> ret >> topHash >> f;
+
+	if(topHash != _tree.topHash()) {
+		std::cerr << "The server tophash doesn't match own!\n\n";
+	}
 
 	f.decrypt(_encKey);
 	f.dump(_fsRoot);
