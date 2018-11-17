@@ -168,6 +168,8 @@ void Server::handleDelete(sw::Packet &p) {
 
 		_tree.removeFile(id);
 
+		_emptyIds.emplace_back(id);
+
 		ret << COMMAND::DONE << _tree.topHash();
 	}
 
