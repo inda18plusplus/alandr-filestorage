@@ -10,10 +10,11 @@ add_executable(${EXEC_NAME} ${SOURCE_FILES} ${SHARED_FILES})
 
 find_package(PkgConfig REQUIRED)
 
+target_link_libraries(${EXEC_NAME} stdc++fs)
+
 #Link
 	find_package(SSLWrap REQUIRED)
-	include_directories(${SSLWRAP_INCLUDE})
-	target_link_libraries(${EXEC_NAME} ${SSLWRAP_LIBRARY} ${SSLWRAP_DEPS})
+	target_link_libraries(${EXEC_NAME} SSLWrap::SSLWrap)
 
 #Find and link Crypto++
     find_package(CryptoPP REQUIRED)
